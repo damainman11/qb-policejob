@@ -1,172 +1,80 @@
-# qb-policejob
-Police Job for QB-Core Framework :police_officer:
-
-# License
-
-    QBCore Framework
-    Copyright (C) 2021 Joshua Eger
-
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>
-
-## Dependencies
-- [qb-core](https://github.com/qbcore-framework/qb-core)
-- [qb-bossmenu](https://github.com/qbcore-framework/qb-bossmenu)  (Deprecated) - For the boss menu
-- [qb-management](https://github.com/qbcore-framework/qb-management) (Replaces qb-bossmenu) - For the boss/gang menu
-- [qb-garages](https://github.com/qbcore-framework/qb-garages) - For the vehicle spawner
-- [qb-clothing](https://github.com/qbcore-framework/qb-clothing) - For the locker room
-- [qb-phone](https://github.com/qbcore-framework/qb-phone) - For the MEOS app and notifications etc.
-- [qb-log](https://github.com/qbcore-framework/qb-logs) - (Deprecated) - For logging certain events
-- [qb-smallresources](https://github.com/qbcore-framework/qb-smallresources) (Replaces qb-log) - qb-log was added to qb-smallresources
-- [qb-menu](https://github.com/qbcore-framework/qb-menu) - For the vehicle menus
-- [qb-input](https://github.com/qbcore-framework/qb-input) - For accessing evidence stashes
-
-
-## Screenshots
-![On Duty / Off Duty](https://imgur.com/KO2ydlt.png)
-![Whitelisted Police Armory](https://imgur.com/TQVIYFb.png)
-![Whitelisted Police Stash](https://imgur.com/Hh2fbs4.png)
-![Vehicle Spawner](https://imgur.com/plgZ9oD.png)
-![Helicopter Spawner](https://imgur.com/jE2IoqK.png)
-![Fingerprint Scan](https://imgur.com/btmurxh.png)
-![Evidence Stash](https://imgur.com/KBOoUy5.png)
-![Spike Placing](https://imgur.com/mTN6c0h.png)
-![Object Placing](https://imgur.com/7Jate4f.png)
-![Police Alert](https://imgur.com/rAIiWYH.png)
-![Securty Cam](https://imgur.com/vFr8nWf.png)
-
-## Features
-- Classical requirements like on duty/off duty, clothing, vehicle, stash etc.
-- Citizen ID based armory (Whitelisted)
-- Fingerprint test
-- Evidence locker (stash)
-- Whitelisted vehicles
-- Speed radars across the map
-- Stormram
-- Impounding player vehicle (permanent / for an amount of money)
-- Integrated jail system
-- Bullet casings
-- GSR
-- Blood drop
-- Evidence bag & Money bag
-- Police radar
-- Handcuff as an item (Can used via command too. Check Commands section.)
-- Emergency services can see each other on map
-
-### Commands
-- /spikestrip - Places spike strip on ground.
-- /pobject [pion/barier/schotten/tent/light/delete] - Places or deletes an object on/from ground.
-- /cuff - Cuffs/Uncuffs nearby player
-- /escort - Escorts nearby plyer.
-- /callsign [text] - Sets the player a callsign on database.
-- /clearcasings - Clears nearby bullet casings.
-- /jail [id] [time] - Sends a player to the jail.
-- /unjail [id] - Takes the player out of jail.
-- /clearblood - Clears nearby blood drops.
-- /seizecash - Seizes nearby player's cash. (Puts in money bag)
-- /sc - Puts soft cuff on nearby player.
-- /cam [cam] - Shows the selected security cam display.
-- /flagplate [plate] [reason] - Flags the vehicle.
-- /unflagplate [plate] - Removes the flag of a vehicle.
-- /plateinfo [plate] - Displays if a vehicle is marked or not.
-- /depot [price] - Depots nearby vehicle. Player can take it after paying the cost.
-- /impound - Impounds nearby vehicle permanently.
-- /paytow [id] - Makes payment to the tow driver.
-- /paylawyer [id] - Makes payment to the lawyer.
-- /radar - Toggles the police radar.
-- /911 [message] - Sends a report to emergency services.
-- /911r [id] - Used to respond the emergency alerts.
-- /911a [message] - Sends an anonymous report to emergency services (gives no location).
-- /anklet - Places anklet (tracking device) on nearby player.
-- /removeanklet [citizenid] - Removes the anklet from player.
-- /ebutton - Used to respond an emergency alert.
-- /takedrivinglicense - Takes the driving license from nearby player.
-- /takedna [id] - Takes a DNA sample from the player.
-
-## Installation
-### Manual
-- Download the script and put it in the `[qb]` directory.
-- Add the following code to your server.cfg/resouces.cfg
-```
-ensure qb-core
-ensure qb-policejob
-```
-
-## Configuration
-```
 Config = {}
 
-Config.Objects = { -- Objects to be placed with /pobject [object]
+Config.Objects = {
     ["cone"] = {model = `prop_roadcone02a`, freeze = false},
-    ["barier"] = {model = `prop_barrier_work06a`, freeze = true},
-    ["schotten"] = {model = `prop_snow_sign_road_06g`, freeze = true},
+    ["barrier"] = {model = `prop_barrier_work06a`, freeze = true},
+    ["roadsign"] = {model = `prop_snow_sign_road_06g`, freeze = true},
     ["tent"] = {model = `prop_gazebo_03`, freeze = true},
     ["light"] = {model = `prop_worklight_03b`, freeze = true},
 }
 
+Config.MaxSpikes = 5
+
+Config.HandCuffItem = 'handcuffs'
+
+Config.LicenseRank = 2
+
+Config.UseTarget = GetConvar('UseTarget', 'false') == 'false'
 Config.Locations = {
-   ["duty"] = { -- On Duty/Off Duty Marker
-       [1] = vector4(440.085, -974.924, 30.689, 90.654),
-       [2] = vector4(-449.811, 6012.909, 31.815, 90.654),
-   },
-   ["vehicle"] = { -- Vehicle Spawner Marker
-       [1] = vector4(448.159, -1017.41, 28.562, 90.654),
-       [2] = vector4(471.13, -1024.05, 28.17, 274.5),
-       [3] = vector4(-455.39, 6002.02, 31.34, 87.93),
-   },
-   ["stash"] = { -- Stash Marker
-       [1] = vector4(453.075, -980.124, 30.889, 90.654),
-   },
-   ["impound"] = { -- Impounded Vehicles Marker
-       [1] = vector4(436.68, -1007.42, 27.32, 180.0),
-       [2] = vector4(-436.14, 5982.63, 31.34, 136.0),
-   },
-   ["helicopter"] = { -- Helicopter Spawner Marker
-       [1] = vector4(449.168, -981.325, 43.691, 87.234),
-       [2] = vector4(-475.43, 5988.353, 31.716, 31.34),
-   },
-   ["armory"] = { -- Armory Marker
-       [1] = vector4(462.23, -981.12, 30.68, 90.654),
-   },
-   ["trash"] = { -- Trash Marker
-       [1] = vector4(439.0907, -976.746, 30.776, 93.03),
-   },
-   ["fingerprint"] = { -- Fingerprint Scan Marker
-       [1] = vector4(460.9667, -989.180, 24.92, 358.5),
-   },
-   ["evidence"] = { -- Evidence Closet 1 Marker
-       [1] = vector4(442.1722, -996.067, 30.689, 187.5),
-   },
-   ["evidence2"] = { -- Evidence Closet 2 Marker
-       [1] = vector4(451.7031, -973.232, 30.689, 1.741),
-   },
-   ["evidence3"] = { -- Evidence Closet 3 Marker
-       [1] = vector4(455.1456, -985.462, 30.689, 2.854),
-   },
-   ["stations"] = { -- Police Stations Blips
-       [1] = {label = "Police Station", coords = vector4(428.23, -984.28, 29.76, 3.5)},
-       [2] = {label = "Prison", coords = vector4(1845.903, 2585.873, 45.672, 272.249)},
-       [3] = {label = "Police Station Paleto", coords = vector4(-451.55, 6014.25, 31.716, 223.81)},
-   },
+    ["duty"] = {
+        [1] = vector3(440.085, -974.924, 30.689),
+        [2] = vector3(629.66, -1.89, 82.78),---SAST
+		[3] = vector3(1826.54, 3692.92, 34.71), ---BCSO
+		[4] = vector3(-1092.23, -833.56, 19.33), ---BCSO
+    },
+    ["vehicle"] = {
+   
+    },
+    ["stash"] = {
+        [1] = vector3(453.075, -980.124, 30.889),
+		[2] = vector3(625.32, -7.95, 82.78),---SAST
+		[3] = vector3(1831.08, 3697.23, 34.71), ---BCSO
+		[4] = vector3(-1102.00, -841.59, 3.68),---sast VP
+    },
+    ["impound"] = {
+    
+    },
+    ["helicopter"] = {
+        
+    },
+    ["armory"] = {
+        [1] = vector3(462.23, -981.12, 30.68),
+		[2] = vector3(625.22, -22.13, 82.78),---SAST
+		[3] = vector3(1835.03, 3695.81, 34.71),--BCSO
+		[4] = vector3(-1095.62, -837.83, 3.68),--sast VP
+    },
+    ["trash"] = {
+        [1] = vector3(622.00, -8.41, 82.81),---SAST
+		[1] = vector3(1824.83, 3671.41, 30.31),---BCSO
+    },
+    ["fingerprint"] = {
+        [1] = vector3(613.16, -3.64, 82.78),---SAST
+		[2] = vector3(1830.87, 3667.03, 30.63),---BCSO
+		[3] = vector3(-1073.00, -818.49, 3.68)
+    },
+    ["evidence"] = {
+        [1] = vector3(442.1722, -996.067, 30.689),
+		[2] = vector3(629.87, 11.32, 90.24),---SAST
+		[3] = vector3(1828.00, 3660.72, 30.31), ---BCSO
+		[4] = vector3(-1102.00, -841.59, 3.68),---sast VP
+		[5] = vector3(-1100.99, -846.30, 3.68),---sast VP
+    },
+    ["stations"] = {
+        [1] = {label = "Police Station", coords = vector4(428.23, -984.28, 29.76, 3.5)},
+        [2] = {label = "Prison", coords = vector4(1845.903, 2585.873, 45.672, 272.249)},
+        [3] = {label = "Police Station Paleto", coords = vector4(-451.55, 6014.25, 31.716, 223.81)},
+		[4] = {label = "Police Station Vinewood", coords = vector4(605.08, -0.75, 101.25, 151)},
+		[5] = {label = "Sandy Sheriff Station", coords = vector4(1853.65, 3685.89, 34.26, 25)},
+		[5] = {label = "Vespuci Police Station", coords = vector4(-1073.00, -818.49, 3.68, 124)},
+    },
 }
 
-Config.ArmoryWhitelist = {} -- Citizen ID Based Armory Whitelist (With Export for Other Scripts)
+Config.ArmoryWhitelist = {}
 
+Config.PoliceHelicopter = "POLMAV"
 
-Config.Helicopter = "POLMAV" -- Model of the Helicopter for Helicopter Spawner
-
-Config.SecurityCameras = { -- Security Cam Locations
-    hideradar = false, -- Don't change
+Config.SecurityCameras = {
+    hideradar = false,
     cameras = {
         [1] = {label = "Pacific Bank CAM#1", coords = vector3(257.45, 210.07, 109.08), r = {x = -25.0, y = 0.0, z = 28.05}, canRotate = false, isOnline = true},
         [2] = {label = "Pacific Bank CAM#2", coords = vector3(232.86, 221.46, 107.83), r = {x = -25.0, y = 0.0, z = -140.91}, canRotate = false, isOnline = true},
@@ -205,7 +113,7 @@ Config.SecurityCameras = { -- Security Cam Locations
     },
 }
 
-Config.AuthorizedVehicles = { -- Police Vehicles and required grade
+Config.AuthorizedVehicles = {
 	-- Grade 0
 	[0] = {
 		["police"] = "Police Car 1",
@@ -266,7 +174,7 @@ Config.AuthorizedVehicles = { -- Police Vehicles and required grade
 
 Config.WhitelistedVehicles = {}
 
-Config.AmmoLabels = { -- Labels for Weapon Ammo
+Config.AmmoLabels = {
     ["AMMO_PISTOL"] = "9x19mm parabellum bullet",
     ["AMMO_SMG"] = "9x19mm parabellum bullet",
     ["AMMO_RIFLE"] = "7.62x39mm bullet",
@@ -275,7 +183,7 @@ Config.AmmoLabels = { -- Labels for Weapon Ammo
     ["AMMO_SNIPER"] = "Large caliber bullet",
 }
 
-Config.Radars = { -- Radar Locations
+Config.Radars = {
 	vector4(-623.44421386719, -823.08361816406, 25.25704574585, 145.0),
 	vector4(-652.44421386719, -854.08361816406, 24.55704574585, 325.0),
 	vector4(1623.0114746094, 1068.9924316406, 80.903594970703, 84.0),
@@ -289,7 +197,7 @@ Config.Radars = { -- Radar Locations
 	vector4(-823.3688, -1146.980, 8.0, 300.0),
 }
 
-Config.CarItems = { -- Default Trunk Items for Police Vehicles
+Config.CarItems = {
     [1] = {
         name = "heavyarmor",
         amount = 2,
@@ -313,25 +221,29 @@ Config.CarItems = { -- Default Trunk Items for Police Vehicles
     },
 }
 
-Config.Items = { -- Items to be displayed on Armory
-    label = "Police Armory",
+Config.Items = {
+    label = "Armory",
     slots = 30,
     items = {
         [1] = {
-            name = "weapon_pistol",
+            name = "weapon_flashlight",
             price = 0,
             amount = 1,
-            info = {
-                serie = "",
-                attachments = {
-                    {component = "COMPONENT_AT_PI_FLSH", label = "Flashlight"},
-                }
-            },
+            info = {},
             type = "weapon",
             slot = 1,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [2] = {
+            name = "weapon_nightstick",
+            price = 0,
+            amount = 1,
+            info = {},
+            type = "weapon",
+            slot = 2,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+        [3] = {
             name = "weapon_stungun",
             price = 0,
             amount = 1,
@@ -339,161 +251,278 @@ Config.Items = { -- Items to be displayed on Armory
                 serie = "",
             },
             type = "weapon",
-            slot = 2,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
-        },
-        [3] = {
-            name = "weapon_pumpshotgun",
-            price = 0,
-            amount = 1,
-            info = {
-                serie = "",
-                attachments = {
-                    {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
-                }
-            },
-            type = "weapon",
             slot = 3,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [4] = {
-            name = "weapon_smg",
+            name = "weapon_heavysniper",
             price = 0,
             amount = 1,
             info = {
                 serie = "",
                 attachments = {
-                    {component = "COMPONENT_AT_SCOPE_MACRO_02", label = "1x Scope"},
                     {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
+                    {component = "COMPONENT_AT_SCOPE_MEDIUM", label = "4x Scope"},
                 }
             },
             type = "weapon",
             slot = 4,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [5] = {
-            name = "weapon_carbinerifle",
+            name = "radio",
             price = 0,
-            amount = 1,
-            info = {
-                serie = "",
-                attachments = {
-                    {component = "COMPONENT_AT_AR_FLSH", label = "Flashlight"},
-                    {component = "COMPONENT_AT_SCOPE_MEDIUM", label = "3x Scope"},
-                }
-            },
-            type = "weapon",
+            amount = 5,
+            info = {},
+            type = "item",
             slot = 5,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [6] = {
-            name = "weapon_nightstick",
+            name = "armor",
             price = 0,
-            amount = 1,
+            amount = 5,
             info = {},
-            type = "weapon",
+            type = "item",
             slot = 6,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [7] = {
-            name = "pistol_ammo",
+            name = "heavyarmor",
             price = 0,
             amount = 5,
             info = {},
             type = "item",
             slot = 7,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [8] = {
-            name = "smg_ammo",
+            name = "firstaid",
             price = 0,
-            amount = 5,
+            amount = 15,
             info = {},
             type = "item",
             slot = 8,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [9] = {
-            name = "shotgun_ammo",
+            name = "handcuffs",
             price = 0,
             amount = 5,
             info = {},
             type = "item",
             slot = 9,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [10] = {
-            name = "rifle_ammo",
+            name = "police_stormram",
             price = 0,
             amount = 5,
             info = {},
             type = "item",
             slot = 10,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [11] = {
-            name = "handcuffs",
-            price = 0,
-            amount = 1,
-            info = {},
-            type = "item",
-            slot = 11,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
-        },
-        [12] = {
-            name = "weapon_flashlight",
-            price = 0,
-            amount = 1,
-            info = {},
-            type = "weapon",
-            slot = 12,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
-        },
-        [13] = {
             name = "empty_evidence_bag",
             price = 0,
             amount = 50,
             info = {},
             type = "item",
+            slot = 11,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+        [12] = {
+            name = "pistol_ammo",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "item",
+            slot = 12,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+        [13] = {
+            name = "smg_ammo",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "item",
             slot = 13,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [14] = {
-            name = "police_stormram",
+            name = "rifle_ammo",
             price = 0,
             amount = 50,
             info = {},
             type = "item",
             slot = 14,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [15] = {
-            name = "armor",
+            name = "snp_ammo",
             price = 0,
             amount = 50,
             info = {},
             type = "item",
             slot = 15,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [16] = {
-            name = "radio",
+            name = "weapon_glock17",
             price = 0,
             amount = 50,
             info = {},
-            type = "item",
+            type = "weapon",
             slot = 16,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
         },
         [17] = {
-            name = "heavyarmor",
+            name = "weapon_m4",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "weapon",
+            slot = 17,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[18] = {
+            name = "weapon_ar15",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "weapon",
+            slot = 18,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[19] = {
+            name = "weapon_remington",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "weapon",
+            slot = 19,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[20] = {
+            name = "weapon_scarh",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "weapon",
+            slot = 20,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[21] = {
+            name = "weapon_mk14",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "weapon",
+            slot = 21,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[22] = {
+            name = "cone",
             price = 0,
             amount = 50,
             info = {},
             type = "item",
-            slot = 17,
-            authorizedJobGrades = {0, 1, 2, 3, 4}
-        }
+            slot = 22,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[23] = {
+            name = "barricade",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "item",
+            slot = 23,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[24] = {
+            name = "tent",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "item",
+            slot = 24,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[25] = {
+            name = "roadblock",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "item",
+            slot = 25,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[26] = {
+            name = "light",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "item",
+            slot = 26,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[27] = {
+            name = "medbag",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "item",
+            slot = 27,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
+		[28] = {
+            name = "morphinebottle",
+            price = 0,
+            amount = 50,
+            info = {},
+            type = "item",
+            slot = 28,
+            authorizedJobGrades = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20}
+        },
     }
 }
-```
+
+Config.VehicleSettings = {
+    ["car1"] = { --- Model name
+        ["extras"] = {
+            ["1"] = true, -- on/off
+            ["2"] = true,
+            ["3"] = true,
+            ["4"] = true,
+            ["5"] = true,
+            ["6"] = true,
+            ["7"] = true,
+            ["8"] = true,
+            ["9"] = true,
+            ["10"] = true,
+            ["11"] = true,
+            ["12"] = true,
+            ["13"] = true,
+        },
+		["livery"] = 1,
+    },
+    ["car2"] = {
+        ["extras"] = {
+            ["1"] = true,
+            ["2"] = true,
+            ["3"] = true,
+            ["4"] = true,
+            ["5"] = true,
+            ["6"] = true,
+            ["7"] = true,
+            ["8"] = true,
+            ["9"] = true,
+            ["10"] = true,
+            ["11"] = true,
+            ["12"] = true,
+            ["13"] = true,
+        },
+		["livery"] = 1,
+    }
+}
